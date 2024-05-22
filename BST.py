@@ -53,7 +53,8 @@ class BinarySearchTree:
 
 
     def inorderTraverse(self,v):
-        
+        if(not v):
+            return
         temp = v
         if(temp.leftchild):
             self.inorderTraverse(temp.leftchild)
@@ -80,6 +81,9 @@ class BinarySearchTree:
             return -1
     
         if(self.isExternal(temp)):
+            if(self.root == temp):
+                self.root = None
+                return
             if(temp.parent.element < temp.element):
                 temp.parent.rightchild = None
             else:
@@ -100,13 +104,16 @@ class BinarySearchTree:
             else:
                 child = temp.rightchild
 
+            if(temp == self.root):
+                self.root = child
+                return
+
             if(temp.parent.element < temp.element):
                 temp.parent.rightchild = child
                 temp.parent.rightchild.parent = temp.parent
             else:
                 temp.parent.leftchild = child
                 temp.parent.leftchild.parent = temp.parent
-        
 
     def isExternal(self,curnode):
         if (curnode.leftchild == None and curnode.rightchild == None):
