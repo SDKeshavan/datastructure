@@ -45,11 +45,15 @@ class AVLTree:
 
     def leftRotate(self, node):
         print("Rotating left")
+        if node is None or node.rightchild is None:
+            return
         z = node.rightchild
         t = z.leftchild
 
         node.rightchild = t
         z.leftchild = node
+
+        z.parent = node.parent
 
         if(not node.parent):
             self.root = z
@@ -57,7 +61,6 @@ class AVLTree:
             node.parent.rightchild = z
         elif(node is node.parent.leftchild):
             node.parent.leftchild = z
-            
         node.parent = z
         if(t):
             t.parent = node
