@@ -84,6 +84,57 @@ class AVLTree:
             temp.leftchild = element
         element.parent = temp   
         self.checkBalance(element)
+
+    def deleteNode(self, element, node):
+        if not node:
+            return node
+        
+        if element < node.element:
+            self.deleteNode(element, node.leftchild)
+        elif element > node.element:
+            self.deleteNode(element, node.rightchild)
+        else:
+
+            if not node.leftchild:
+                temp = node.rightchild
+                if(node == self.root):
+                    self.root = temp
+                    return
+                if(node is node.parent.rightchild):
+                    node.parent.rightchild = temp
+                else:  
+                    node.parent.leftchild = temp
+                node = None
+                return temp
+            elif not node.rightchild:
+                temp = node.leftchild
+                if(node == self.root):
+                    self.root = temp
+                    return
+                if(node is node.parent.rightchild):
+                    node.parent.rightchild = temp
+                else:  
+                    node.parent.leftchild = temp
+                node = None
+                return temp
+            
+
+            temp = self.getMinValueNode(node.rightchild)
+
+            node.element = temp.element
+
+            self.deleteNode(temp.element, node.rightchild)
+
+        if node is None:
+            return node
+
+        if node.leftchild:
+            node.leftchild.parent = node
+        if node.rightchild:
+            node.rightchild.parent = node
+
+        self.checkBalance(node)
+        return node
                 
 
     def checkBalance(self, node):
@@ -106,6 +157,8 @@ class AVLTree:
 
 
     def inOrder(self, root):
+        if(not root):
+            return
         if(root.leftchild):
             self.inOrder(root.leftchild)
         print(root.element, end=" ")
@@ -120,6 +173,10 @@ class AVLTree:
     def printTree(self, node=None):
         if node is None:
             node = self.root
+
+        if(node is None):
+            print("MTY")
+            return
 
         if node.leftchild:
             self.printTree(node.leftchild)
