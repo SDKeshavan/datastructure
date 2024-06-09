@@ -1,6 +1,6 @@
 class AVLTree:
     class Node:
-        def __init__(self, element, left=None, right=None):
+        def __init__(self, element, left =None, right=None):
             self.element = element
             self.leftchild = left
             self.rightchild = right
@@ -21,6 +21,8 @@ class AVLTree:
 
     def rightRotate(self, node):
         print("Rotating Right")
+        if node is None or node.leftchild is None:
+            return
         z = node.leftchild
         t = z.rightchild
 
@@ -83,7 +85,22 @@ class AVLTree:
         else:
             temp.leftchild = element
         element.parent = temp   
-        self.checkBalance(element)
+        self.checkBalance(element.parent)
+
+    def findNode(self, element):
+        temp = self.root
+        
+        while(temp):
+            if(temp.element == element):
+                return temp
+
+            if(temp.element < element):
+                temp = temp.rightchild
+            else:
+                temp = temp.leftchild
+        
+        return -1
+
 
     def deleteNode(self, element, node):
         if not node:
@@ -135,23 +152,32 @@ class AVLTree:
 
         self.checkBalance(node)
         return node
+    
+    def getMinValueNode(self, node):
+        current = node
+        while current.leftchild is not None:
+            current = current.leftchild
+        return current
                 
 
     def checkBalance(self, node):
-        temp = node.parent
+        if(not node.parent or not node):
+            return
+        temp = node
+        print("Chck bl ",temp.element)
         print("Entering Chck Bal")
         while(temp):
             bf = self.getBalance(temp)
-
-            if(bf > 1 and self.getBalance(temp.leftchild) >= 1):
+            print(temp.element)
+            if(bf > 1 and self.getBalance(temp.leftchild) >= 0):
                 self.rightRotate(temp)
-            elif(bf > 1 and self.getBalance(temp.leftchild) <= -1):
+            elif(bf > 1 and self.getBalance(temp.leftchild) < 0):
                 self.leftRotate(temp.leftchild)
                 self.rightRotate(temp)
-            elif(bf<-1 and self.getBalance(temp.rightchild) >= 1):
+            elif(bf<-1 and self.getBalance(temp.rightchild) > 0):
                 self.rightRotate(temp.rightchild)
                 self.leftRotate(temp)
-            elif(bf<-1 and self.getBalance(temp.rightchild) >= -1):
+            elif(bf<-1 and self.getBalance(temp.rightchild) <=0):
                 self.leftRotate(temp)
             temp = temp.parent
 
@@ -169,11 +195,12 @@ class AVLTree:
     def insertElement(self, element):
         newNode = self.Node(element)
         self.insert(self.root, newNode)
+        
 
     def printTree(self, node=None):
         if node is None:
             node = self.root
-
+        
         if(node is None):
             print("MTY")
             return
@@ -198,9 +225,21 @@ class AVLTree:
 # Driver code to demonstrate the usage of AVLTree
 if __name__ == "__main__":
     avl = AVLTree()
-    elements = [69, 9, 19, 27, 18, 108, 99, 81]
+    elements = [33, 13, 52, 9, 21, 61, 8, 11]
+    # elements = [1, 2, 3]
     for element in elements:
         avl.insertElement(element)
+    
+    avl.printTree()
+
+    avl.deleteNode(13, avl.root)
+    avl.deleteNode(9, avl.root)
+    # avl.deleteNode(33, avl.root)
+    # avl.deleteNode(61, avl.root)
+    # avl.deleteNode(11, avl.root)
+    # avl.deleteNode(8, avl.root)
+    # avl.deleteNode(52, avl.root)
+    # avl.deleteNode(21, avl.root)
 
     print("Inorder traversal of the constructed AVL tree is")
     avl.inOrder(avl.root)
